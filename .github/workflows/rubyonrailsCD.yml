@@ -1,0 +1,80 @@
+# This workflow uses actions that are not certified by GitHub.  They are
+# provided by a third-party and are governed by separate terms of service,
+# privacy policy, and support documentation.
+#
+# This workflow will install a prebuilt Ruby version, install dependencies, and
+# run tests and linters.
+name: "Ruby on Rails CD"
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows: ["Ruby on Rails CI"]
+    types:
+      - completed
+jobs:
+  build_and_push:
+    runs-on: ubuntu-latest
+    env:
+      TAG : "${GITHUB_REF:11}-${GITHUB_SHA}"
+      REPO_NAME: ${{ github.event.repository.name }}
+    steps:
+      - name: Login to docker.io
+        run: docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} -p ${{ secrets.DOCKER_HUB_PASSWORD }}
+      
+      - name: Get repository code
+        uses: actions/checkout@v3
+
+      - name: "Set TAG environmental variable"
+        run: |
+          echo "TAG=${{ secrets.DOCKER_HUB_USERNAME }}/$REPO_NAME:${GITHUB_REF:11}-${GITHUB_SHA}" >> $GITHUB_ENV
+
+ #     - name: Build image
+ #       run: docker build -t $TAG -f Dockerfile .
+      
+ #     - name: Push image to docker.io
+ #       run: docker push $TAG
+        
+      - name: Logout from docker.io
+        run: docker logout
+
+      - name: Create env file
+        run: |
+          echo "IMG_NAME=$TAG" >> tag.txt
+
+      - name: Upload artifact file
+        uses: actions/upload-artifact@v2
+        with:
+          name: tag
+          path: tag.txt
+  
+  deploy:
+    needs: [build_and_push]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifact file
+        uses: actions/download-artifact@v2
+        with:
+          name: tag
+    
+      - name: Load artifact file
+        run: cat tag.txt >> $GITHUB_ENV
+
+      - name: check
+        run: echo $IMG_NAME
+
+      - name: Create directory
+        run: mkdir -p ~/.ssh/
+
+      - name: Create secret_key
+        run: echo "${{ secrets.BASTYON_PRIV_KEY }}" >> ~/.ssh/id_rsa
+
+      - name: Chmod
+        run: chmod 600 ~/.ssh/id_rsa
+
+      - name: Keyscan
+        run: ssh-keyscan -H 158.160.45.16 > ~/.ssh/known_hosts
+
+      - name: ssh
+        run: |
+          ssh ubuntu@158.160.45.16
+          export REM=$IMG_NAME && echo $REM
