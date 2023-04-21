@@ -73,6 +73,8 @@ jobs:
         run: |
           ssh skachan@158.160.29.80
           export REM=$IMG_NAME && echo $REM
+          pwd
+          ls
           terraform validate
           terraform plan
           terraform apply
