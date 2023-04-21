@@ -66,10 +66,14 @@ jobs:
       - name: Chmod
         run: chmod 600 ~/.ssh/id_rsa
 
-#      - name: Keyscan
-#        run: ssh-keyscan -H 158.160.45.16 > ~/.ssh/known_hosts
+      - name: Keyscan
+        run: ssh-keyscan -H 158.160.29.80 > ~/.ssh/known_hosts
 
-#      - name: ssh
-#        run: |
-#          ssh ubuntu@158.160.45.16
-#          export REM=$IMG_NAME && echo $REM
+      - name: ssh
+        run: |
+          ssh ubuntu@158.160.29.80
+          export REM=$IMG_NAME && echo $REM
+          terraform validate
+          terraform plan
+          terraform apply
+          terraform destroy
