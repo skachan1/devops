@@ -23,14 +23,14 @@ jobs:
         run: |
           echo "TAG=${{ secrets.DOCKER_HUB_USERNAME }}/$REPO_NAME:${GITHUB_REF:11}-${GITHUB_SHA}" >> $GITHUB_ENV
 
-      - name: Build image
-        run: docker build -t $TAG -f Dockerfile .
-      
-      - name: Push image to docker.io
-        run: docker push $TAG
-        
-      - name: Logout from docker.io
-        run: docker logout
+#      - name: Build image
+#        run: docker build -t $TAG -f Dockerfile .
+#      
+#      - name: Push image to docker.io
+#        run: docker push $TAG
+#        
+#      - name: Logout from docker.io
+#        run: docker logout
 
       - name: Create env file
         run: |
@@ -71,7 +71,7 @@ jobs:
 
       - name: ssh
         run: |
-          ssh ubuntu@158.160.29.80
+          ssh skachan@158.160.29.80
           export REM=$IMG_NAME && echo $REM
           terraform validate
           terraform plan
