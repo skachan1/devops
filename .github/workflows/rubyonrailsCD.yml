@@ -72,7 +72,7 @@ jobs:
       - name: ssh
         run: |
           ssh skachan@158.160.29.80
-          export REM=$IMG_NAME && echo $REM
+          export REM=$IMG_NAME && echo $REM && whoami
           whoami
           pwd
           ls
