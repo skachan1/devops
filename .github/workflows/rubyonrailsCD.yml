@@ -6,11 +6,7 @@
 # run tests and linters.
 name: "Ruby on Rails CD"
 on:
-  workflow_dispatch:
-  workflow_run:
-    workflows: ["Ruby on Rails CI"]
-    types:
-      - completed
+  workflow_call:
 jobs:
   build_and_push:
     runs-on: ubuntu-latest
