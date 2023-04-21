@@ -29,6 +29,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
+      - name: ECHO
+        run: echo ${{ secrets.DATABASE_NAME }}
 #      - name: Create_docker_network
 #        run: docker network create -d bridge test-bridge-network
 #      - name: Create_db
