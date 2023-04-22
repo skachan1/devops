@@ -71,12 +71,4 @@ jobs:
 
       - name: ssh
         run: |
-          ssh skachan@158.160.29.80 "export REM=$IMG_NAME && echo $REM && whoami && terraform validate && terraform plan && terraform apply && terraform destroy"
-          export REM=$IMG_NAME && echo $REM && whoami
-          whoami
-          pwd
-          ls
-          terraform validate
-          terraform plan
-          terraform apply
-          terraform destroy
+          ssh skachan@158.160.29.80 "export REM=$IMG_NAME && echo $REM && whoami && terraform validate && terraform plan && terraform apply -auto-approve && sleep 15 && ansible -i ./terraform-inventory -m ping vmpostsnsible -i ./terraform-inventory -m ping vmposts && terraform destroy -auto-approve"
