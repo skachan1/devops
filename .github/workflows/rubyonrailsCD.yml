@@ -67,8 +67,8 @@ jobs:
         run: chmod 600 ~/.ssh/id_rsa
 
       - name: Keyscan
-        run: ssh-keyscan -H 158.160.29.80 > ~/.ssh/known_hosts
+        run: ssh-keyscan -H 51.250.110.188 > ~/.ssh/known_hosts
 
       - name: ssh
         run: |
-          ssh skachan@158.160.29.80 "export REM=$IMG_NAME && echo $REM && whoami && terraform validate && terraform plan && terraform apply -auto-approve && sleep 15 && ansible -i ./terraform-inventory -m ping vmpostsnsible -i ./terraform-inventory -m ping vmposts && terraform destroy -auto-approve"
+          ssh skachan@51.250.110.188 "export REM=$IMG_NAME && echo $REM && whoami && terraform validate && terraform plan && terraform apply -auto-approve && sleep 15 && ansible -i ./terraform-inventory -m ping vmpostsnsible -i ./terraform-inventory -m ping vmposts && terraform destroy -auto-approve"
