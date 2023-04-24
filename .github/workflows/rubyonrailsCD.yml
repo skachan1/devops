@@ -76,4 +76,4 @@ jobs:
 
       - name: ssh
         run: |
-          ssh skachan@51.250.110.188 "export REM=$IMG_NAME && echo $REM && whoami && bash check_state.bash && ansible-playbook -i terraform-inventory ./ansible/deploy_posts.yml && terraform destroy -auto-approve"
+          ssh skachan@158.160.15.251 "export REM=$IMG_NAME && echo $REM && whoami && bash check_state.bash && ansible-playbook -i terraform-inventory ./ansible/deploy_posts.yml && terraform destroy -auto-approve"
