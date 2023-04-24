@@ -50,6 +50,8 @@ jobs:
   deploy:
     needs: [build_and_push]
     runs-on: ubuntu-latest
+    env:
+      REPO_NAME: ${{ github.event.repository.name }}
     steps:
       - name: Download artifact file
         uses: actions/download-artifact@v2
@@ -76,4 +78,4 @@ jobs:
 
       - name: ssh
         run: |
-          ssh skachan@${{ secrets.BASTYON_ADDR }} "export REM=$IMG_NAME && echo $REM && whoami && bash check_state.bash && ansible-playbook -i terraform-inventory ./ansible/deploy_posts.yml"
+          ssh skachan@${{ secrets.BASTYON_ADDR }} "export REM=$IMG_NAME && echo $REM && whoami && bash check_state.bash && ansible-playbook -i terraform-inventory ./ansible/$REPO_NAME.yml"
