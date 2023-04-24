@@ -72,8 +72,8 @@ jobs:
         run: chmod 600 ~/.ssh/id_rsa
 
       - name: Keyscan
-        run: ssh-keyscan -H 158.160.15.251 > ~/.ssh/known_hosts
+        run: ssh-keyscan -H ${{ secrets.BASTYON_ADDR }} > ~/.ssh/known_hosts
 
       - name: ssh
         run: |
-          ssh skachan@158.160.15.251 "export REM=$IMG_NAME && echo $REM && whoami && bash check_state.bash && ansible-playbook -i terraform-inventory ./ansible/deploy_posts.yml && terraform destroy -auto-approve"
+          ssh skachan@${{ secrets.BASTYON_ADDR }} "export REM=$IMG_NAME && echo $REM && whoami && bash check_state.bash && ansible-playbook -i terraform-inventory ./ansible/deploy_posts.yml && terraform destroy -auto-approve"
