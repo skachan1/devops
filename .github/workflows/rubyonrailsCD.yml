@@ -72,7 +72,7 @@ jobs:
         run: chmod 600 ~/.ssh/id_rsa
 
       - name: Keyscan
-        run: ssh-keyscan -H 51.250.110.188 > ~/.ssh/known_hosts
+        run: ssh-keyscan -H 158.160.15.251 > ~/.ssh/known_hosts
 
       - name: ssh
         run: |
