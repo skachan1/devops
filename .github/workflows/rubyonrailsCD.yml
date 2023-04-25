@@ -78,4 +78,4 @@ jobs:
 
       - name: ssh
         run: |
-          ssh skachan@${{ secrets.BASTYON_ADDR }} "export REM=$IMG_NAME && echo $REM && whoami && bash check_state.bash && ansible-playbook -i terraform-inventory ./ansible/$REPO_NAME.yml"
+          ssh skachan@${{ secrets.BASTYON_ADDR }} "export YC_TOKEN=${{ secrets.YC_TOKEN }} && whoami && bash check_state.bash && ansible-playbook -i terraform-inventory ./ansible/$REPO_NAME.yml"
