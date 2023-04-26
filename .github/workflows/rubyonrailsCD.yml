@@ -23,29 +23,19 @@ jobs:
         run: |
           echo "TAG=${{ secrets.DOCKER_HUB_USERNAME }}/$REPO_NAME:${GITHUB_REF:11}-${GITHUB_SHA}" >> $GITHUB_ENV
 
-#      - name: Build image
-#        run: docker build -t $TAG -f Dockerfile .
+      - name: Build image
+        run: docker build -t $TAG -f Dockerfile .
 
-#      - name: Tag latest
-#        run: docker tag $TAG ${{ secrets.DOCKER_HUB_USERNAME }}/$REPO_NAME:active
+      - name: Tag latest
+        run: docker tag $TAG ${{ secrets.DOCKER_HUB_USERNAME }}/$REPO_NAME:active
       
-#      - name: Push image to docker.io
-#        run: |
-#          docker push $TAG
-#          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/$REPO_NAME:active
+      - name: Push image to docker.io
+        run: |
+          docker push $TAG
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/$REPO_NAME:active
         
       - name: Logout from docker.io
         run: docker logout
-
-      - name: Create env file
-        run: |
-          echo "IMG_NAME=$TAG" >> tag.txt
-
-      - name: Upload artifact file
-        uses: actions/upload-artifact@v2
-        with:
-          name: tag
-          path: tag.txt
   
   deploy:
     needs: [build_and_push]
@@ -53,17 +43,6 @@ jobs:
     env:
       REPO_NAME: ${{ github.event.repository.name }}
     steps:
-      - name: Download artifact file
-        uses: actions/download-artifact@v2
-        with:
-          name: tag
-    
-      - name: Load artifact file
-        run: cat tag.txt >> $GITHUB_ENV
-
-      - name: check
-        run: echo $IMG_NAME
-
       - name: Create directory
         run: mkdir -p ~/.ssh/
 
@@ -78,4 +57,4 @@ jobs:
 
       - name: ssh
         run: |
-          ssh skachan@${{ secrets.BASTYON_ADDR }} "export YC_TOKEN=${{ secrets.YC_TOKEN }} && whoami && bash check_state.bash && ansible-playbook -i terraform-inventory ./ansible/$REPO_NAME.yml"
+          ssh skachan@${{ secrets.BASTYON_ADDR }} "export YC_TOKEN=${{ secrets.YC_TOKEN }} && bash check_state.bash && ansible-playbook -i terraform-inventory ./ansible/$REPO_NAME.yml"
