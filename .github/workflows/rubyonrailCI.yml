@@ -26,12 +26,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Create_docker_network
-        run: docker network create -d bridge test-bridge-network
-      - name: Create_db
-        run: docker run -d --name ${{ secrets.DATABASE_HOST }} --network test-bridge-network -e POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} -e POSTGRES_USER=${{ secrets.POSTGRES_USER }} postgres:11-alpine
-      - name: Start_test
-        run: docker build -f Dockerfile_test --network test-bridge-network --build-arg DATABASE_HOST=${{ secrets.DATABASE_HOST }} --build-arg DATABASE_NAME=${{ secrets.DATABASE_NAME }} --build-arg DATABASE_LOGIN=${{ secrets.DATABASE_LOGIN }} --build-arg DATABASE_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} -t test .
+#      - name: Create_docker_network
+#        run: docker network create -d bridge test-bridge-network
+#      - name: Create_db
+#        run: docker run -d --name ${{ secrets.DATABASE_HOST }} --network test-bridge-network -e POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} -e POSTGRES_USER=${{ secrets.POSTGRES_USER }} postgres:11-alpine
+#      - name: Start_test
+#        run: docker build -f Dockerfile_test --network test-bridge-network --build-arg DATABASE_HOST=${{ secrets.DATABASE_HOST }} --build-arg DATABASE_NAME=${{ secrets.DATABASE_NAME }} --build-arg DATABASE_LOGIN=${{ secrets.DATABASE_LOGIN }} --build-arg DATABASE_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} -t test .
         
       # Add or replace dependency steps here
 #      - name: Install Ruby and gems
