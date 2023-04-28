@@ -1,5 +1,5 @@
-# This workflow will install a prebuilt Ruby version, install dependencies, and
-# run tests and linters.
+# This workflow will install a built Ruby version, install dependencies, and
+# deploy app.
 name: "Ruby on Rails CD"
 on:
   workflow_call:
@@ -10,25 +10,25 @@ jobs:
       REPO_NAME: ${{ github.event.repository.name }}
     steps:
       - name: Login to docker.io
-        run: docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} -p ${{ secrets.DOCKER_HUB_PASSWORD }}
+        run: docker login -u oauth -p ${{ secrets.YC_TOKEN }} cr.yandex
       
       - name: Get repository code
         uses: actions/checkout@v3
 
       - name: "Set TAG environmental variable"
         run: |
-          echo "TAG=${{ secrets.DOCKER_HUB_USERNAME }}/$REPO_NAME:${GITHUB_REF:11}-${GITHUB_SHA}" >> $GITHUB_ENV
+          echo "TAG=cr.yandex/${{ secrets.REG_ID }}/$REPO_NAME:${GITHUB_REF:11}-${GITHUB_SHA}" >> $GITHUB_ENV
 
       - name: Build image
         run: docker build -t $TAG -f Dockerfile .
 
       - name: Tag latest
-        run: docker tag $TAG ${{ secrets.DOCKER_HUB_USERNAME }}/$REPO_NAME:active
+        run: docker tag $TAG cr.yandex/${{ secrets.REG_ID }}/$REPO_NAME:active
       
       - name: Push image to docker.io
         run: |
           docker push $TAG
-          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/$REPO_NAME:active
+          docker push cr.yandex/${{ secrets.REG_ID }}/$REPO_NAME:active
         
       - name: Logout from docker.io
         run: docker logout
@@ -53,4 +53,4 @@ jobs:
 
       - name: ssh
         run: |
-          ssh skachan@${{ secrets.BASTYON_ADDR }} "export YC_TOKEN=${{ secrets.YC_TOKEN }} && bash check_state.bash && ansible-playbook -i terraform-inventory ./ansible/$REPO_NAME.yml"
+          ssh skachan@${{ secrets.BASTYON_ADDR }} "export YC_TOKEN=${{ secrets.YC_TOKEN }} && export DOCKER_PASSWORD=${{ secrets.YC_TOKEN }} && bash check_state.bash && ansible-playbook -i terraform-inventory ./ansible/$REPO_NAME.yml"
