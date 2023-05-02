@@ -53,4 +53,4 @@ jobs:
 
       - name: ssh
         run: |
-          ssh skachan@${{ secrets.BASTYON_ADDR }} "export YC_TOKEN=${{ secrets.YC_TOKEN }} && export DOCKER_PASSWORD=${{ secrets.YC_TOKEN }} && bash check_state.bash && ansible-playbook -i terraform-inventory ./ansible/$REPO_NAME.yml"
+          ssh skachan@${{ secrets.BASTYON_ADDR }} "export YC_TOKEN=${{ secrets.YC_TOKEN }} && export DOCKER_PASSWORD=${{ secrets.YC_TOKEN }} && export ELASTICSEARCH_PASSWORD=${{ secrets.ELASTICSEARCH_PASSWORD }} && export ELASTICSEARCH_USERNAME=${{ secrets.ELASTICSEARCH_USERNAME }} && bash check_state.bash && ansible-playbook -i terraform-inventory ./ansible/$REPO_NAME.yml"
