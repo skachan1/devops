@@ -19,16 +19,16 @@ jobs:
         run: |
           echo "TAG=cr.yandex/${{ secrets.REG_ID }}/$REPO_NAME:${GITHUB_REF:11}-${GITHUB_SHA}" >> $GITHUB_ENV
 
-      - name: Build image
-        run: docker build -t $TAG -f Dockerfile .
+#      - name: Build image
+#        run: docker build -t $TAG -f Dockerfile .
 
-      - name: Tag latest
-        run: docker tag $TAG cr.yandex/${{ secrets.REG_ID }}/$REPO_NAME:active
+#      - name: Tag latest
+#        run: docker tag $TAG cr.yandex/${{ secrets.REG_ID }}/$REPO_NAME:active
       
-      - name: Push image to docker.io
-        run: |
-          docker push $TAG
-          docker push cr.yandex/${{ secrets.REG_ID }}/$REPO_NAME:active
+#      - name: Push image to docker.io
+#        run: |
+#          docker push $TAG
+#          docker push cr.yandex/${{ secrets.REG_ID }}/$REPO_NAME:active
         
       - name: Logout from docker.io
         run: docker logout
